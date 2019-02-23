@@ -1,8 +1,7 @@
-# class1
+# 仿网易云音乐h5移动端(实现单曲播放+歌词显示)
 
-> A Vue.js project
-
-## Build Setup
+- 技术栈vue+vue-router+vuex+axios
+- [NeteaseCloudMusicApi](https://github.com/szzf/NeteaseCloudMusicApi)
 
 ``` bash
 # install dependencies
@@ -18,4 +17,3 @@ npm run build
 npm run build --report
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
