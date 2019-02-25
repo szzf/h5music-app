@@ -41,6 +41,14 @@ Vue.filter('artistsFormatter', function (dataArr) {
     return str
 })
 
+Vue.filter('playCountFormatter', function (count) {
+    var str = ''
+    if (count > 10000) {
+        str = ' ' + (count / 10000).toFixed(1) + '万'
+    }
+    return str
+})
+
 Vue.directive('focus', {
     inserted: function (el) {
         el.focus()

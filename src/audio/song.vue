@@ -1,18 +1,22 @@
 <template>
-    <div class="wrap" ref="wrap">
-        <div class="m-songLogo" @click="playSong"><img :style="imgStyle" alt="">
+    <div class="wrap" ref="wrap" :style="imgStyle.bg">
+        <div class="m-songLogo" @click="playSong" v-if="$store.state.loadState">
+            <img :style="imgStyle.logo" alt="">
             <div class="play-btn" v-if="!$store.state.curPlaySong.isPlaying">
                 <i class="icon-play2"></i>
             </div>
         </div>
-        <song-info :songId="songId" :songDetails="songDetails" :isPlaying="isPlaying" />
+        <song-info :songId="songId" :songDetails="songDetails" :isPlaying="isPlaying" v-if="$store.state.loadState" />
 
-        <pro :songId="songId" :songDetails="songDetails" :isPlaying="isPlaying" />
+        <pro :songId="songId" :songDetails="songDetails" :isPlaying="isPlaying" v-if="$store.state.loadState" />
+
+        <loading v-if="!$store.state.loadState" />
     </div>
 </template>
 
 <script>
 import api from '@/api/index.js'
+import loading from '@/components/loading.vue'
 import pro from '@/audio/pro.vue'
 import songInfo from '@/audio/songinfo.vue'
 export default {
@@ -20,15 +24,20 @@ export default {
         return {
             thumbImg: '?imageView&thumbnail=369x0&quality=75&tostatic=0',
             blurImg: 'http://music.163.com/api/img/blur/',
+            imgBgUrl: '',
+            songImgUrl: '',
             songDetails: null,
             songImgPic_str: '', // 图片ID
-            songImgUrl: '../assets/images/img.jpg',
             songId: '',
             isPlaying: false,
-            imgStyle: ''
+            imgStyle: {
+                bg: '',
+                logo: ''
+            }
         }
     },
     created() {
+        this.$store.state.loadState = false
         this.songId = this.$route.params.id
         this.getSongImg()
     },
@@ -38,18 +47,21 @@ export default {
 
                 this.songDetails = res.data.songs[0]
                 this.songImgUrl = res.data.songs[0].al.picUrl + this.thumbImg
-                var img = new Image()
-                img.src = this.songImgUrl
-                img.onload = () => {
-                    this.imgStyle = 'backgroundImage:url("' + this.songImgUrl + '")'
-                    this.songImgPic_str = res.data.songs[0].al.pic_str
-                    var blurImgUrl = this.blurImg + this.songImgPic_str
-
-                    this.$nextTick(() => {
-                        var dom = this.$refs.wrap
-                        dom.style.backgroundImage = 'url("' + blurImgUrl + '")'
-                    })
-                }
+                this.blurImgUrl = this.blurImg + res.data.songs[0].al.pic_str + '?param=100y100'
+                var temp = [this.songImgUrl, this.blurImgUrl]
+                var imgLoadCount = 0
+                temp.forEach((item) => {
+                    var img = new Image()
+                    img.src = item
+                    img.onload = () => {
+                        imgLoadCount++
+                        if (imgLoadCount === 2) {
+                            this.$store.state.loadState = true
+                            this.imgStyle.bg = 'backgroundImage:url("' + this.blurImgUrl + '")'
+                            this.imgStyle.logo = 'backgroundImage:url("' + this.songImgUrl + '")'
+                        }
+                    }
+                })
 
                 //music.163.com/api/img/blur/109951163028234845
             })
@@ -65,10 +77,21 @@ export default {
                 this.$store.state.curPlaySong.audio.play()
             }
         },
+        imgLoad(url) {
+            var bgImg = new Image()
+            bgImg.src = url
+            bgImg.onerror = () => {
+                console.log('img onerror')
+            }
+            bgImg.onload = () => {
+                this.$store.state.loadState = true
+            }
+        },
     },
     components: {
         pro,
-        songInfo
+        songInfo,
+        loading
     }
 }
 </script>

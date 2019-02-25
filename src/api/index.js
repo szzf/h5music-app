@@ -36,6 +36,13 @@ var api = {
                 "id": id
             }
         })
+    },
+    getPlayList(id) {
+        return axios.get('/playlist/detail', {
+            params: {
+                "id": id
+            }
+        })
     }
 }
 

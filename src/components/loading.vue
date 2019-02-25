@@ -1,5 +1,5 @@
 <template>
-    <div class="loading-box" ref="loading">
+    <div class="loading-box" ref="loading" v-if="!$store.state.loadState">
         <span class="loading icon-spinner2"></span>
         <p>页面正在努力加载中...</p>
     </div>

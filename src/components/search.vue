@@ -1,5 +1,5 @@
 <template>
-    <div class="search-page">
+    <div class="search-page" v-if="$store.state.loadState">
 
         <div class="search-box bor-mobie bor-btm">
             <div class="input-box">
@@ -72,9 +72,11 @@ export default {
         searchRes
     },
     created() {
+        this.$store.state.loadState = false
         api.getSearchHot().then((data) => {
             this.hotList = data.data.result.hots
             console.log('created')
+            this.$store.state.loadState = true
         })
     },
     methods: {

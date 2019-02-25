@@ -12,7 +12,8 @@ var state = {
         audio: null,
         isPlaying: false,
         curTime: 0
-    }
+    },
+    loadState: false
 }
 
 export default new Vuex.Store({

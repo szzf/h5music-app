@@ -1,5 +1,5 @@
 <template>
-    <div class="hot-list">
+    <div class="hot-list" v-if="$store.state.loadState">
         <div class="hot-pic">
             <div class="content">
                 <div class="title-pic"></div>
@@ -23,7 +23,7 @@
                 </div>
             </li>
         </ul>
-        <div class="hot-btm" v-if="!isShowAll">
+        <div class="hot-btm" v-if="!isShowAll && $store.state.loadState">
             <span @click="showAll">查看完整榜单 &gt;</span>
         </div>
     </div>
@@ -37,15 +37,28 @@ export default {
             songData: '',
             songList: [],
             updateTime: '',
-            isShowAll: false
+            isShowAll: false,
+            imgUrl: require("../assets/images/hot_music_bg_3x.jpg")
         }
     },
     created() {
+        this.$store.state.loadState = false
         api.getHotList().then((data) => {
             this.songData = data.data.playlist
-            this.updateTime = data.updateTime
+            this.updateTime = this.songData.updateTime
             this.getSongList(this.songData, 0, 20)
         })
+    },
+    mounted() {
+        var bgImg = new Image()
+        bgImg.src = this.imgUrl
+        bgImg.onerror = () => {
+            console.log('img onerror')
+        }
+        bgImg.onload = () => {
+            this.$store.state.loadState = true
+            console.log(bgImg.src)
+        }
     },
     methods: {
         getSongList(data, start, end) {
@@ -83,7 +96,7 @@ export default {
 .hot-list {
     .hot-pic {
         position: relative;
-        background: url("../assets/images/hot_music_bg_3x.jpg") no-repeat;
+        background-image: url("../assets/images/hot_music_bg_3x.jpg");
         background-size: contain;
         padding-bottom: 38.93%;
         .content {

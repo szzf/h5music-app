@@ -10,7 +10,7 @@
             <router-view v-if="!$route.meta.keepAlive"></router-view>
         </div>
         <input type="text" id="search" class="hid-input">
-        <!-- <loadingBox></loadingBox> -->
+        <loadingBox></loadingBox>
 
     </div>
 </template>

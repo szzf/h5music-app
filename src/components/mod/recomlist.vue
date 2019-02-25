@@ -1,12 +1,12 @@
 <template>
     <div class="recom-list">
-        <h2 class="list-title">推荐歌单</h2>
+        <h2 class="list-title" v-if="$store.state.loadState">推荐歌单</h2>
         <ul class="songlist">
-            <li class="songlist-item" v-for="item in songList" :key="item.id">
-                <a href="#1">
+            <li class="songlist-item" v-for="item in songList" :key="item.id" @click="clickRecomList(item)">
+                <a>
                     <div class="song-img">
                         <img :src="item.thumbUrl" alt="" @load='imgLoad()'>
-                        <span class="icon-headphones">{{item.playCount}}</span>
+                        <span class="icon-headphones">{{item.playCount | playCountFormatter()}}</span>
                         <i class="icon-play2"></i>
                     </div>
                     <p class="song-text">{{item.name}}</p>
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+
 export default {
     name: 'recomlist',
     props: {
@@ -32,12 +32,15 @@ export default {
         }
     },
     methods: {
+        clickRecomList(item) {
+            this.$router.push('/playlist/' + item.id)
+        },
+
         imgLoad() {
-            // this.imgLoaded++
-            // if (this.imgLoaded === 6) {
-            //     var el = document.getElementsByClassName('loading-box')[0]
-            //     el.style.display = 'none'
-            // }
+            this.imgLoaded++
+            if (this.imgLoaded === 6) {
+                this.$store.state.loadState = true
+            }
         },
     },
     created() {

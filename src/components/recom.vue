@@ -30,7 +30,7 @@ export default {
                         id: item.id,
                         name: item.name,
                         thumbUrl: item.picUrl + thumbImg,
-                        playCount: this.playCountAbbr(item.playCount)
+                        playCount: item.playCount
                     }
                     this.recomList.push(temp)
                 })
@@ -51,13 +51,6 @@ export default {
                 })
             })
         },
-        playCountAbbr(num) {
-            var str = ''
-            if (num > 10000) {
-                str = ' ' + (num / 10000).toFixed(1) + '万'
-            }
-            return str
-        },
         artistsToStr(arr) {
             var str = ''
             arr.forEach((item, index) => {
@@ -71,6 +64,7 @@ export default {
         }
     },
     created() {
+        this.$store.state.loadState = false
         this.getRecomList(6)
         this.getNewList()
     }

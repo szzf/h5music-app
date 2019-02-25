@@ -1,48 +1,92 @@
 <template>
-    <div class="new-list">
-        <h2 class="list-title" v-if="$store.state.loadState">最新音乐</h2>
-        <ul class="songlist">
-            <li class="songlist-item bor-btm bor-mobie" v-for="item in songList" :key="item.id" @click="clickSong(item)">
-                <div class="content-wrap bor-mobie bor-btm">
+    <div class="playlist-main">
+        <dl class="list">
+            <dt class="title-text">歌曲列表</dt>
+            <dd class="songlist-item" v-for="item in tracks" :key="item.id" @click="clickSong(item)">
+                <div class="order">{{item.order}}</div>
+                <div class="content-wrap bor-mobie bor-btm" @click="clickSong(item)">
                     <div class="content">
                         <div class="title hid">
                             <h4 class="name">{{item.name}}</h4>
                             <span class="alias">{{item.alias && '('+item.alias+')'}}</span>
                         </div>
-                        <span class="art hid">{{item.artists | artistsFormatter()}} - {{item.album}}</span>
+                        <span class="art hid">{{item.artists}} - {{item.album}}</span>
                     </div>
                     <div class="play-btn">
                         <i class="icon-play2"></i>
                     </div>
                 </div>
-            </li>
-        </ul>
+            </dd>
+        </dl>
     </div>
 </template>
 
 <script>
 export default {
-    props: {
-        songList: {
-            type: Array
+    data() {
+        return {
+            // list: [],
+            tracks: []
         }
     },
+    props: ['playList'],
     methods: {
         clickSong(item) {
-            console.log(item)
             this.$router.push('/song/' + item.id)
+        }
+    },
+    watch: {
+        playList(val) {
+
+            var order = 0
+            val.tracks.forEach((item) => {
+                order++
+                if (order < 10) {
+                    order = '0' + order
+                }
+                var obj = {
+                    id: item.id,
+                    name: item.name,
+                    alias: '',
+                    artists: item.ar[0].name,   // 有可能是个数组
+                    album: item.al.name,
+                    order: order
+                }
+                this.tracks.push(obj)
+            })
+            console.log(this.tracks)
         }
     }
 }
 </script>
 
-<style lang="scss">
-.new-list {
-    .songlist {
-        .songlist-item {
+<style lang='scss'>
+.playlist-main {
+    .list {
+        .title-text {
             position: relative;
+            height: 23px;
+            line-height: 23px;
+            padding: 0 10px;
+            font-size: 12px;
+            color: #666;
+            background-color: #eeeff0;
+        }
+        .songlist-item {
             display: flex;
-            margin-left: 10px;
+            align-items: center;
+            padding-left: 10px;
+            .order {
+                width: 28px;
+                font-size: 16px;
+                color: #999;
+            }
+            .red {
+                color: #df3436;
+            }
+            .smaller {
+                font-size: 12px;
+            }
             .content-wrap {
                 display: flex;
                 flex: 1 1 auto;
@@ -59,8 +103,8 @@ export default {
                         }
                         .alias {
                             margin-left: 4px;
-                            font-size: 16px;
                             color: #888;
+                            font-size: 16px;
                         }
                     }
                     .art {
