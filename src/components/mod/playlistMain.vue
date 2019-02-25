@@ -1,5 +1,5 @@
 <template>
-    <div class="playlist-main">
+    <div class="playlist-main" v-if="$store.state.loadState">
         <dl class="list">
             <dt class="title-text">歌曲列表</dt>
             <dd class="songlist-item" v-for="item in tracks" :key="item.id" @click="clickSong(item)">
@@ -25,7 +25,6 @@
 export default {
     data() {
         return {
-            // list: [],
             tracks: []
         }
     },
@@ -37,7 +36,6 @@ export default {
     },
     watch: {
         playList(val) {
-
             var order = 0
             val.tracks.forEach((item) => {
                 order++
@@ -54,7 +52,6 @@ export default {
                 }
                 this.tracks.push(obj)
             })
-            console.log(this.tracks)
         }
     }
 }

@@ -2,7 +2,7 @@
     <div class="playlist">
         <playlist-header :playList="playList" />
         <playlist-main :playList="playList" />
-        <playlist-comment />
+        <playlist-com :playList="playList" />
         <loading />
     </div>
 </template>
@@ -12,7 +12,7 @@ import api from '@/api/index.js'
 import loading from '@/components/loading'
 import playlistHeader from '@/components/mod/playlistHeader'
 import playlistMain from '@/components/mod/playlistMain'
-import playlistComment from '@/components/mod/playlistComment'
+import playlistCom from '@/components/mod/playlistComment'
 export default {
     data() {
         return {
@@ -24,12 +24,13 @@ export default {
         this.playListId = this.$route.params.id
         api.getPlayList(this.playListId).then(res => {
             this.playList = res.data.playlist
+            console.log(this.playList)
         })
     },
     components: {
         playlistHeader,
         playlistMain,
-        playlistComment,
+        playlistCom,
         loading
     }
 }

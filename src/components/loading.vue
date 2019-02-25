@@ -14,6 +14,7 @@ export default {
 <style lang='scss'>
 .loading-box {
     display: block;
+    padding-bottom: 30%;
     .loading {
         display: block;
         width: 48px;

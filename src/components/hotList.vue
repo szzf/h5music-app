@@ -57,7 +57,6 @@ export default {
         }
         bgImg.onload = () => {
             this.$store.state.loadState = true
-            console.log(bgImg.src)
         }
     },
     methods: {

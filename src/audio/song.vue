@@ -134,8 +134,8 @@ export default {
             transform: translate(-50%, -50%);
             .icon-play2 {
                 font-size: 50px;
-                color: #000;
-                opacity: 0.38;
+                color: #fff;
+                opacity: 0.68;
             }
         }
     }

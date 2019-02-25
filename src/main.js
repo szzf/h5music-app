@@ -18,9 +18,14 @@ Vue.filter('dateFormatter', function (dataStr, pattern = 'CN-MM-DD') {
     var time = new Date(dataStr)
     var m = time.getMonth() + 1
     var d = time.getDate()
+    var h = time.getHours()
+    var min = time.getMinutes()
+    var s = time.getSeconds()
 
     if (pattern === 'CN-MM-DD') {
         str = `${m}月${d}日`
+    } else if (pattern === 'HH-MM') {
+        str = `${h}:${min}`
     }
     return str
 })

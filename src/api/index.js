@@ -43,6 +43,13 @@ var api = {
                 "id": id
             }
         })
+    },
+    getPlaylistComment(id) {
+        return axios.get('/comment/playlist', {
+            params: {
+                "id": id
+            }
+        })
     }
 }
 
