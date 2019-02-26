@@ -38,26 +38,12 @@ export default {
             songList: [],
             updateTime: '',
             isShowAll: false,
-            imgUrl: require("../assets/images/hot_music_bg_3x.jpg")
+            imgUrl: 'http://s3.music.126.net/m/s/img/hot_music_bg_2x.jpg'
         }
     },
     created() {
         this.$store.state.loadState = false
-        api.getHotList().then((data) => {
-            this.songData = data.data.playlist
-            this.updateTime = this.songData.updateTime
-            this.getSongList(this.songData, 0, 20)
-        })
-    },
-    mounted() {
-        var bgImg = new Image()
-        bgImg.src = this.imgUrl
-        bgImg.onerror = () => {
-            console.log('img onerror')
-        }
-        bgImg.onload = () => {
-            this.$store.state.loadState = true
-        }
+        this.getData()
     },
     methods: {
         getSongList(data, start, end) {
@@ -86,6 +72,31 @@ export default {
         },
         clickSong(item) {
             this.$router.push('/song/' + item.id)
+        },
+        getData() {
+            var getHotList = new Promise((res, rej) => {
+                api.getHotList().then((data) => {
+                    this.songData = data.data.playlist
+                    this.updateTime = this.songData.updateTime
+                    this.getSongList(this.songData, 0, 20)
+                    res(true)
+                })
+            })
+            var getImg = new Promise((res, rej) => {
+                var bgImg = new Image()
+                bgImg.src = this.imgUrl
+                bgImg.onerror = () => {
+                    console.log('img onerror')
+                }
+                bgImg.onload = () => {
+                    res(true)
+                }
+            })
+            Promise.all([getHotList, getImg]).then((val) => {
+                if (val[0] && val[1]) {
+                    this.$store.state.loadState = true
+                }
+            })
         }
     }
 }
@@ -95,7 +106,7 @@ export default {
 .hot-list {
     .hot-pic {
         position: relative;
-        background-image: url("../assets/images/hot_music_bg_3x.jpg");
+        background-image: url("http://s3.music.126.net/m/s/img/hot_music_bg_2x.jpg");
         background-size: contain;
         padding-bottom: 38.93%;
         .content {
@@ -109,7 +120,8 @@ export default {
             justify-content: center;
             padding-left: 20px;
             .title-pic {
-                background: url("../assets/images/index_icon_3x.png") no-repeat;
+                background: url("http://s3.music.126.net/m/s/img/index_icon_2x.png")
+                    no-repeat;
                 background-size: 166px 97px;
                 width: 142px;
                 height: 67px;

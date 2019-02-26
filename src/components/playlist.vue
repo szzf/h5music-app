@@ -13,19 +13,32 @@ import loading from '@/components/loading'
 import playlistHeader from '@/components/mod/playlistHeader'
 import playlistMain from '@/components/mod/playlistMain'
 import playlistCom from '@/components/mod/playlistComment'
+
 export default {
     data() {
         return {
             playListId: '',
-            playList: []
+            playList: [],
         }
     },
     created() {
-        this.playListId = this.$route.params.id
-        api.getPlayList(this.playListId).then(res => {
-            this.playList = res.data.playlist
-            console.log(this.playList)
-        })
+        this.getDetail()
+    },
+    methods: {
+        getDetail() {
+            this.playListId = this.$route.params.id
+            api.getPlayList(this.playListId).then(res => {
+                this.playList = res.data.playlist
+            })
+        },
+    },
+    activated() {
+        // 判断重新加载或读取缓存
+        if (this.playListId != this.$route.params.id) {
+            this.$store.state.loadState = false
+            this.getDetail()
+        }
+        console.log('activated')
     },
     components: {
         playlistHeader,
@@ -35,6 +48,3 @@ export default {
     }
 }
 </script>
-
-<style>
-</style>

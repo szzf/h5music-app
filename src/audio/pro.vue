@@ -2,7 +2,10 @@
     <div class="m-pro">
         <div class="info-wrap">
             <div class="info">
-                <div class="title"><span>{{songDetails && songDetails.name}}({{songDetails && songDetails.ar[0].name}})</span></div>
+                <div class="title hid">
+                    <span>{{songDetails && songDetails.name}}({{songDetails &&
+                        songDetails.ar[0].name}})</span>
+                </div>
                 <div class="time-wrap">
                     <span class="cur-time">{{songCurTime}}</span>
                     <span>/</span>
@@ -140,7 +143,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .wrap .info-wrap {
     flex: 1;
     margin: 0 20px;
@@ -154,6 +157,14 @@ export default {
             padding: 2px 4px;
             text-align: center;
             color: rgba(255, 255, 255, 0.8);
+        }
+        .title {
+            flex: 1 1 50%;
+            color: #fff;
+        }
+        .time-wrap {
+            flex: 1 0 20%;
+            text-align: right;
         }
     }
     .pro-wrap {

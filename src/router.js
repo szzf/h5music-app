@@ -49,7 +49,10 @@ export default new Router({
         {
             path: '/playlist/:id?',
             name: 'playlist',
-            component: playlist
+            component: playlist,
+            meta: {
+                keepAlive: true
+            }
         },
         {
             path: "*",

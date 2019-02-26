@@ -22,7 +22,7 @@
                     </div>
 
                     <div class="content">
-                        随着shallow获奖，LadyGaga现在是广播 ＋格莱美 ＋金球 ＋英奥 ＋奥斯卡得奖者 ! 支持进军体育界勇夺奥运会金牌啦！
+                        {{item.content}}
                     </div>
                 </div>
             </dd>
@@ -43,6 +43,7 @@ export default {
     props: ['playList'],
     methods: {
         clickLike(e) {
+            console.log(e.target.children[0])
             e.target.children[0].setAttribute('fill', '#ff0000')
         }
     },

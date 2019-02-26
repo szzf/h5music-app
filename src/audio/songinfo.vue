@@ -1,5 +1,5 @@
 <template>
-    <div class="m-songInfo">
+    <div class="m-songInfo hid">
 
         <h2 class="title">{{songDetails && songDetails.name}}</h2>
 
@@ -7,6 +7,7 @@
         <div class="lyric-wrap">
             <div class="lyricList" ref="lyricList">
                 <p v-for="(item, index) in songLyricArr" :key="index" :class="{active:activeIndex-1 == index}">{{item.text}}</p>
+                <p class="active" v-if="!songLyricArr.length">暂无歌词</p>
             </div>
         </div>
     </div>
@@ -59,7 +60,7 @@ export default {
             }
         },
         showLyric(curTime) {
-            if (this.songLyricArr[this.activeIndex].time - curTime >= 0) {
+            if (this.songLyricArr[this.activeIndex].time - curTime >= 0.5) {
                 this.$refs.lyricList.style.top = (this.activeIndex - 2) * -20 + 'px'
             } else {
                 this.activeIndex++

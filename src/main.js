@@ -4,9 +4,9 @@ import Vue from 'vue'
 import App from './App'
 import '../static/reset.css'
 import '../static/style.css'
-import router from './router.js'
 import FastClick from '../node_modules/fastclick/lib/fastclick.js'
 import store from './store.js'
+import router from './router.js'
 
 
 // 全局过滤器

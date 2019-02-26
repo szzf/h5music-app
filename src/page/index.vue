@@ -9,9 +9,7 @@
             </keep-alive>
             <router-view v-if="!$route.meta.keepAlive"></router-view>
         </div>
-        <input type="text" id="search" class="hid-input">
         <loadingBox></loadingBox>
-
     </div>
 </template>
 
@@ -20,7 +18,6 @@ import loadingBox from '@/components/loading'
 import headerBox from '@/components/header'
 import navBox from '@/components/nav'
 import recom from '@/components/recom'
-import test from '@/components/test'
 
 export default {
     name: 'App',
@@ -33,17 +30,12 @@ export default {
         headerBox,
         navBox,
         recom,
-        test
     }
 }
 
 </script>
 
 <style lang="scss">
-.hid-input {
-    position: absolute;
-    top: 0;
-}
 .main {
     padding-top: 104px;
     width: 100%;

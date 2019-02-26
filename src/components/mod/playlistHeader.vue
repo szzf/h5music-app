@@ -1,7 +1,7 @@
 <template>
     <div class="playlist-header" v-if="$store.state.loadState">
         <div class="wrap-bg">
-            <div class="playlist-bg" :style="{backgroundImage:'url('+imgBgUrl+')'}">
+            <div class="playlist-bg">
             </div>
             <div class="title">
                 <div class="cover-img">
@@ -12,7 +12,8 @@
                 <div class="title-info">
                     <div class="text">{{list.name}}</div>
                     <div class="avatar">
-                        <span class="avatar-img"><img :src="list.creator.avatarUrl" alt="">{{list.creator.nickname}}</span>
+                        <span class="avatar-img hid"><img :src="list.creator.avatarUrl+'?imageView&thumbnail=60x0&quality=75&tostatic=0'"
+                                alt="">{{list.creator.nickname}}</span>
                     </div>
                 </div>
             </div>
@@ -49,6 +50,7 @@ export default {
     },
     props: ['playList'],
     created() {
+        console.log(this.$store.state.loadState)
         this.$store.state.loadState = false
 
     },
@@ -82,7 +84,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .playlist-header {
     position: relative;
     .wrap-bg {
@@ -96,11 +98,20 @@ export default {
             right: 0;
             bottom: 0;
             // background-image: url("http://music.163.com/api/img/blur/109951163887926418?param=100y100");
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: 50%;
-            filter: blur(20px);
-            transform: scale(1.5);
+            // background-repeat: no-repeat;
+            // background-size: cover;
+            // background-position: 50%;
+            // -webkit-filter: blur(20px);
+            // -moz-filter: blur(20px);
+            // -ms-filter: blur(20px);
+            // filter: blur(20px);
+            // transform: scale(1.5);
+            background: linear-gradient(
+                45deg,
+                #af9d99,
+                rgba(0, 0, 0, 0.3),
+                #ad9995
+            );
         }
         .title {
             position: relative;
@@ -151,9 +162,10 @@ export default {
                 }
                 .avatar {
                     position: relative;
+                    width: 200px;
                     .avatar-img {
                         display: inline-block;
-                        width: 120px;
+                        width: 100%;
                         font-size: 13px;
                         color: hsla(0, 0%, 100%, 0.7);
                         img {

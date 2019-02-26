@@ -37,6 +37,7 @@ export default {
     watch: {
         playList(val) {
             var order = 0
+            this.tracks = []
             val.tracks.forEach((item) => {
                 order++
                 if (order < 10) {
