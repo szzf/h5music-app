@@ -1,6 +1,20 @@
 import axios from '@/axios.js'
 
 var api = {
+    getSearch(word) {
+        return axios.get('/search', {
+            params: {
+                keywords: word
+            }
+        })
+    },
+    getSearchMultimatch(word) {
+        return axios.get('/search/multimatch', {
+            params: {
+                keywords: word
+            }
+        })
+    },
     getRecomList() {
         return axios.get('/personalized')
     },
@@ -14,7 +28,11 @@ var api = {
         return axios.get('/search/hot')
     },
     getSearchKeywords(val) {
-        return axios.get('search/suggest?keywords=' + val)
+        return axios.get('search/suggest', {
+            params: {
+                keywords: val
+            }
+        })
     },
     getSongDetails(id) {
         return axios.get('/song/detail', {
