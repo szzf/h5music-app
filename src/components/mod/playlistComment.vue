@@ -4,7 +4,7 @@
             <dt class="title-text">精彩评论</dt>
             <dd class="comment-wrap" v-for="(item, index) in hotCommentList" :key="index">
                 <div class="user-img">
-                    <img :src="item.user.avatarUrl+'?imageView&thumbnail=60x0&quality=75&tostatic=0&type=webp'" alt="">
+                    <img :src="item.user.avatarUrl+'?imageView&thumbnail=60x0&quality=75'" alt="">
                 </div>
                 <div class="comment-main bor-mobie bor-btm">
                     <div class="user">
@@ -45,6 +45,9 @@ export default {
         clickLike(e) {
             console.log(e.target.children[0])
             e.target.children[0].setAttribute('fill', '#ff0000')
+        },
+        clickImg(e) {
+            alert(e.target.src)
         }
     },
     watch: {
@@ -78,9 +81,10 @@ export default {
             .user-img {
                 flex: 0 0 30px;
                 margin: 0 10px;
-                height: 35px;
+                height: 30px;
                 img {
                     width: 100%;
+                    height: 100%;
                 }
             }
             .comment-main {

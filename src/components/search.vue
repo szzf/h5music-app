@@ -1,6 +1,5 @@
 <template>
     <div class="search-page" v-if="$store.state.loadState">
-
         <div class="search-box bor-mobie bor-btm">
             <div class="input-box">
                 <i class="icon-search"></i>
@@ -14,22 +13,22 @@
                 </div>
             </div>
         </div>
-        <div class="search-main">
+        <div class="search-main" v-if="!searchListFlag">
             <div class="hot-list" v-if="searchFlag">
                 <h3 class="title">热门搜索: </h3>
                 <ul class="list">
-                    <li class="item bor-mobie" v-for="(item,index) in hotList" :key="index">
+                    <li class="item bor-mobie" v-for="(item,index) in hotList" :key="index" @click="clickHot(item)">
                         <a class="link" href="#">{{item.first}}</a>
                     </li>
                 </ul>
             </div>
             <div class="history" v-if="searchFlag">
                 <ul class="history-list">
-                    <li class="history-item">
+                    <li class="history-item" v-for="(item, index) in searchHistoryList" :key="index" @click="getSearchRes(item)">
                         <i class="icon-clock"></i>
                         <div class="content  bor-mobie bor-btm">
-                            <span class="text hid">起风了</span>
-                            <div class="close">
+                            <span class="text hid">{{item && item}}</span>
+                            <div class="close" @click.stop.prevent="removeBtn(item)">
                                 <i class="icon-cross"></i>
                             </div>
                         </div>
@@ -37,7 +36,7 @@
                 </ul>
             </div>
             <div class="search-suggest" v-if="!searchFlag">
-                <div class="title  bor-mobie bor-btm">搜索“{{keyword}}”</div>
+                <div class="title  bor-mobie bor-btm" @click="getSearchRes(keyword)">搜索“{{keyword}}”</div>
                 <ul class="res-list">
                     <li class="res-item" v-for="(item,index) in suggestWords" :key="index" @click="clickSong(item)">
                         <i class="icon-search"></i>
@@ -46,12 +45,13 @@
                 </ul>
             </div>
         </div>
+        <search-res :searchResList="searchResList" v-if="searchListFlag" />
     </div>
 </template>
 
 <script>
 import api from '@/api/index.js'
-import { _debounce } from '../utils/util.js'
+import { _debounce, LBC } from '../utils/util.js'
 import searchHot from './mod/search-hot'
 import searchRes from './mod/search-res'
 export default {
@@ -60,11 +60,14 @@ export default {
             keyword: '',
             holder: '搜索歌曲、歌手、专辑',
             searchFlag: true,
+            searchListFlag: false,
+            curSearchKeyword: '',
             hotList: [],
             historyList: [],
             suggestWords: [],
+            searchResList: [],
+            searchHistoryList: [],
             composing: false,
-
         }
     },
     components: {
@@ -73,9 +76,9 @@ export default {
     },
     created() {
         this.$store.state.loadState = false
+        this.getLBC()
         api.getSearchHot().then((data) => {
             this.hotList = data.data.result.hots
-            console.log('created')
             this.$store.state.loadState = true
         })
     },
@@ -84,7 +87,9 @@ export default {
             this.holder = '搜索歌曲、歌手、专辑'
             this.keyword = ''
             this.searchFlag = true
+            this.searchListFlag = false
             this.suggestWords = []
+            this.searchResList = []
         },
         comStart(e) {
             this.composing = true
@@ -105,17 +110,64 @@ export default {
                 this.searchFlag = true
             }
         },
+        getSearchRes(name) {
+            this.$store.state.loadState = false
+            api.getSearch(name).then(res => {
+                this.searchResList = res.data.result.songs
+                this.curSearchKeyword = name
+                this.keyword = name
+                this.holder = ''
+                this.searchListFlag = true
+                this.$store.state.loadState = true
+                this.setLBC(name)
+                this.getLBC()
+            })
+        },
         clickSong(item) {
-            console.log(item)
+            this.getSearchRes(item.keyword)
+        },
+        clickHot(item) {
+            this.getSearchRes(item.first)
+        },
+        removeBtn(item) {
+            this.removeLBC(item)
+        },
+        setLBC(keyword) {
+            if (this.searchHistoryList.indexOf(keyword) === -1) {
+                var str = LBC().get('searchHistory') || ''
+                str += str === '' ? keyword : '&' + keyword
+                LBC().add('searchHistory', str)
+            }
+        },
+        getLBC() {
+            var str = LBC().get('searchHistory')
+            if (!str) {
+                this.searchHistoryList = []
+                return
+            }
+            this.searchHistoryList = str.split('&')
+        },
+        removeLBC(item) {
+            var str = LBC().get('searchHistory')
+            var index = str.indexOf(item)
+            str = str.replace(item, '').replace('&&', '&').replace(/^\&|\&$/, '')
+            LBC().add('searchHistory', str)
+            this.getLBC()
         }
     },
     watch: {
         keyword: _debounce(function (val) {
+            console.log(val)
             if (!val) return
+            if (this.curSearchKeyword != this.keyword) {
+                this.searchListFlag = false
+            }
             api.getSearchKeywords(val).then((data) => {
+                console.log(data)
                 this.suggestWords = data.data.result.allMatch
+                console.log(this.searchFlag)
+                console.log(this.suggestWords)
             })
-
         }, 500)
     }
 }
@@ -163,6 +215,7 @@ export default {
             }
             .holder {
                 position: absolute;
+                width: calc(100% - 60px);
                 top: 0;
                 height: 30px;
                 line-height: 30px;
@@ -239,7 +292,7 @@ export default {
                             font-size: 16px;
                         }
                         .close {
-                            margin-right: 20px;
+                            padding: 10px 20px 10px 10px;
                             .icon-cross {
                                 font-size: 14px;
                                 color: #ddd;
